@@ -4,13 +4,15 @@ import viteLogo from '/vite.svg'
 import './App.css'
 import * as React from 'react'
 import { Button } from './components/ui/button'
+import Hero from './components/custom/Hero'
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
     <>
-      <Button>Plan Your Trip</Button>
+     {/* Hero */}
+     <Hero />
     </>
   )
 }
