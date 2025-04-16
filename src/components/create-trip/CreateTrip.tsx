@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { SingleValue } from "react-select";
 import {
+  AI_PROMPT,
   SelectTravelesList,
   TripBudgetList,
 } from "@/components/constants/options";
@@ -12,6 +13,7 @@ import { TripDates } from "./TripDates";
 import { TripBudget } from "./Budget";
 import { TravelPartyInput } from "./HeadCount";
 import { toast } from "sonner";
+import { generateTravelPlan } from "@/service/AIModal";
 
 const CreateTrip = () => {
   const [place, setPlace] = useState<SingleValue<PlaceOption>>(null);
@@ -35,11 +37,29 @@ const CreateTrip = () => {
   // This effect will run whenever formdata changes
 
 
-  const OnGenerateTrip = () => {
+  const OnGenerateTrip = async () => {
     if (!formdata?.location||!formdata?.startDate || !formdata?.endDate || !formdata?.budget || !formdata?.headcount) {
       toast("Please fill all the fields");
       return;
 
+    }
+
+    const FINAL_PROMPT = AI_PROMPT
+    .replace('{location}', formdata?.location?.label)
+    .replace('{totalDays}', String((new Date(formdata.endDate).getTime() - new Date(formdata.startDate).getTime()) / (1000 * 3600 * 24)))
+    .replace('{headcount}', formdata?.headcount)
+    .replace('{budget}', formdata?.budget);
+    console.log("FINAL_PROMPT", FINAL_PROMPT);
+    
+    // Call the API with the FINAL_PROMPT
+    
+    try{
+      const result =await generateTravelPlan(FINAL_PROMPT);
+      console.log("travel plan is :", result);
+      toast.success("Travel plan generated successfully");
+    }catch(error){
+      console.error("Error generating travel plan:", error);
+      toast.error("Failed to generate travel plan");
     }
   };
 
