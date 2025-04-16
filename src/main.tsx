@@ -4,7 +4,7 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.js'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import CreateTrip from './create-trip/CreateTrip'
+import CreateTrip from './components/create-trip/CreateTrip.jsx'
 import Header from './components/custom/Header.js'
 
 
