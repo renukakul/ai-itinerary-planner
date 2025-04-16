@@ -1,17 +1,16 @@
 {
-    "files": [],
-    "references": [
-      {
-        "path": "./tsconfig.app.json"
-      },
-    ],
-    "compilerOptions": {
-      "esModuleInterop": true,
-      "allowSyntheticDefaultImports": true,
-      "baseUrl": ".",
-      "paths": {
-        "@/*": ["./src/*"]
-      }
+  "compilerOptions": {
+    "module": "es2020", // Ensure this is set to "es2020" or another supported value
+    "target": "esnext",
+    "jsx": "react-jsx",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "types": ["vite/client"], // Add this to include Vite-specific types
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
     }
   }
-  
+}
