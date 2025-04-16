@@ -11,6 +11,7 @@ import { PlaceOption } from "./types";
 import { TripDates } from "./TripDates";
 import { TripBudget } from "./Budget";
 import { TravelPartyInput } from "./HeadCount";
+import { toast } from "sonner";
 
 const CreateTrip = () => {
   const [place, setPlace] = useState<SingleValue<PlaceOption>>(null);
@@ -32,6 +33,15 @@ const CreateTrip = () => {
     console.log("formdata", formdata);
   }, [formdata]);
   // This effect will run whenever formdata changes
+
+
+  const OnGenerateTrip = () => {
+    if (!formdata?.location||!formdata?.startDate || !formdata?.endDate || !formdata?.budget || !formdata?.headcount) {
+      toast("Please fill all the fields");
+      return;
+
+    }
+  };
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 animate-fade-in">
@@ -95,6 +105,7 @@ const CreateTrip = () => {
             className="bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 
               text-white font-bold py-4 px-10 rounded-xl text-lg shadow-lg hover:shadow-xl transition-all
               hover:scale-105 transform duration-300"
+            onClick={OnGenerateTrip}
           >
             Create My Trip Plan
           </Button>
