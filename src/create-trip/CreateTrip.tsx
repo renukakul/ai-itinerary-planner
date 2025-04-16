@@ -1,7 +1,18 @@
+import { on } from 'events';
 import * as React from 'react';
+import { useState } from 'react';
+import { SingleValue } from 'react-select';
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 
 const CreateTrip: React.FC = () => {
+  // Define the type for the place option
+  // This type should match the structure of the data returned by Google Places API  
+  type PlaceOption = {
+    label: string;
+    value: string;
+  };
+  
+  const [place, setPlace] = useState<SingleValue<PlaceOption>>(null);
   return (
     <div className='sm:px md:px lg:px-56 xl:px-96 2xl:px-96 px-5 mt-10'>
       <h2 className='font-bold text-3xl'>Tell us your travel preference</h2>
@@ -25,6 +36,10 @@ const CreateTrip: React.FC = () => {
           <label htmlFor='trip-destination' className='text-gray-500 text-[20px]'>Trip Destination</label>
             <GooglePlacesAutocomplete 
             apiKey={import.meta.env.VITE_GOOGLE_PLACE_API_KEY} // Type assertion for the API key
+            selectProps={{
+              value: place,
+              onChange: (v) => { setPlace(v); console.log(v); },
+            }}
             />
           
         </div>
