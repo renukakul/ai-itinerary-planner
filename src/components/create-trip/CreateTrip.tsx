@@ -6,6 +6,7 @@ import { TravelPartyInput } from "./HeadCount";
 import { TripBudgetList, SelectTravelesList } from "@/components/constants/options";
 import { useCreateTripForm } from "../../hooks/useCreateTripForm"
 import { LoginDialog } from "@/components/Dialog/LoginDialog";
+import axios from "axios";
 
 const CreateTrip = () => {
   const {
@@ -18,6 +19,8 @@ const CreateTrip = () => {
     handleLocationChange,
     OnGenerateTrip,
   } = useCreateTripForm();
+
+  
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 md:py-12 animate-fade-in">

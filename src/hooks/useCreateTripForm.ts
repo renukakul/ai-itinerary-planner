@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { AI_PROMPT } from "@/components/constants/options";
 import { generateTravelPlan } from "@/service/AIModal";
 import { PlaceOption } from "./types";
+import axios from "axios";
 
 export const useCreateTripForm = () => {
   const [formdata, setFormData] = useState<Record<string, any>>({});
@@ -21,9 +22,25 @@ export const useCreateTripForm = () => {
   };
 
   const login = useGoogleLogin({
-    onSuccess: (codeResp) => console.log(codeResp),
+    onSuccess: (codeResp) => GetUserProfile(codeResp),
     onError: (error) => console.log(error),
   });
+
+  const GetUserProfile= (tokenInfo: { access_token: any; }) => {
+    axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${tokenInfo?.access_token}`,{
+      headers: {
+        Authorization: `Bearer ${tokenInfo?.access_token}`,
+        Accept: 'application/json',
+      },
+
+  }).then((response) => {
+    console.log("User profile data:", response.data);
+    localStorage.setItem("user", JSON.stringify(response.data));
+    setOpenDialog(false);
+    toast.success("Login successful");
+    OnGenerateTrip();
+    });
+  }
 
   const OnGenerateTrip = async () => {
     if (!formdata?.location || !formdata?.startDate || !formdata?.endDate || !formdata?.budget || !formdata?.headcount) {
