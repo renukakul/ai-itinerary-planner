@@ -56,12 +56,9 @@ export const useCreateTripForm = () => {
   
     setLoading(true);
   
-    // Calculate total days
-    const totalDays = (new Date(formdata.endDate).getTime() - new Date(formdata.startDate).getTime()) / (1000 * 3600 * 24);
-    setFormData(prev => ({
-      ...prev,
-      totalDays: totalDays
-    }));
+    const totalDays = Math.ceil(
+      (new Date(formdata.endDate).getTime() - new Date(formdata.startDate).getTime()) / (1000 * 3600 * 24)
+    );
   
     const user = localStorage.getItem("user");
     if (!user) {
@@ -81,11 +78,14 @@ export const useCreateTripForm = () => {
         throw new Error("Invalid response from AI service");
       }
   
-      console.log("Travel plan is:", result);
       toast.success("Travel plan generated successfully");
   
-      // Pass the valid result to SaveAITrip
-      await SaveAITrip(result);
+      const formdataWithDays = {
+        ...formdata,
+        totalDays,
+      };
+  
+      await SaveAITrip(result, formdataWithDays);
     } catch (error) {
       console.error("Error generating travel plan:", error);
       toast.error("Failed to generate travel plan");
@@ -93,14 +93,14 @@ export const useCreateTripForm = () => {
       setLoading(false);
     }
   };
+  
 
   useEffect(() => {
     console.log("formdata", formdata);
   }, [formdata]);
 
-  const SaveAITrip = async (TripData: Record<string, any>) => {
+  const SaveAITrip = async (TripData: Record<string, any>, userSelection: Record<string, any>) => {
     if (!TripData || Object.keys(TripData).length === 0) {
-      console.error("Invalid trip data:", TripData);
       throw new Error("Invalid trip data");
     }
   
@@ -108,22 +108,16 @@ export const useCreateTripForm = () => {
     const user = JSON.parse(localStorage.getItem("user") || "{}");
     const docID = Date.now().toString();
   
-    // Save the trip data with userSelection including totalDays
     await setDoc(doc(db, "AITrips", docID), {
-      userSelection: {
-        ...formdata,  // Include all formdata fields
-        totalDays: formdata.totalDays,  // Add totalDays to userSelection
-      },
+      userSelection,
       tripData: TripData,
       userEmail: user?.email,
       docID: docID,
     });
   
     setLoading(false);
-  
     navigate("/view-trip/" + docID);
   };
-  
 
   return {
     place,
