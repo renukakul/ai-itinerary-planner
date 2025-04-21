@@ -8,12 +8,15 @@ import { PlaceOption } from "./types";
 import axios from "axios";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "@/service/FirebaseConfig";
+import { useNavigate } from "react-router-dom";
 
 export const useCreateTripForm = () => {
   const [formdata, setFormData] = useState<Record<string, any>>({});
   const [place, setPlace] = useState<SingleValue<PlaceOption>>(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleInputChange = (name: string, value: any) => {
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -109,6 +112,8 @@ const SaveAITrip = async (TripData: Record<string, any>) => {
     });
   
     setLoading(false);
+  
+    navigate("/view-trip/" + docID);
   };
 
   return {
