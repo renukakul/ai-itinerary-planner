@@ -1,52 +1,50 @@
+import * as React from "react";
 import { db } from "@/service/FirebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 
-function viewTrip() {
-  const [trip, setTripId] = useState<Record<string, any> | null>(null);
-
+const ViewTrip = () => {
+  const [trip, setTrip] = useState<Record<string, any> | null>(null);
   const { tripId } = useParams();
-  console.log(tripId);
 
   useEffect(() => {
-    tripId && tripDetails();
+    if (tripId) {
+      tripDetails();
+    }
   }, [tripId]);
 
-  // used to fetch trip details from the server
-  // and display them on the page
-  // this function will be called when the component mounts
-
   const tripDetails = async () => {
-    // fetch trip details from the server
-    // return trip details
-    if (!tripId) {
-      throw new Error("Trip ID is undefined");
+    try {
+      const docRef = doc(db, "AITrips", tripId!); // Non-null assertion because you've already checked it
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        console.log("Document data:", docSnap.data());
+        setTrip(docSnap.data());
+        toast.success("Trip details fetched successfully");
+      } else {
+        console.log("No such document!");
+        toast.error("No such document!");
+      }
+    } catch (error) {
+      console.error("Error fetching trip:", error);
+      toast.error("Failed to fetch trip details");
     }
-    const docRef = doc(db, "AITrips", tripId);
-    const docSnap = await getDoc(docRef);
-
-    if (docSnap.exists()) {
-      console.log("Document data:", docSnap.data());
-      setTripId(docSnap.data());
-      toast.success("Trip details fetched successfully");
-    } else {
-      console.log("No such document!");
-      throw new Error("No such document!");
-      toast.error("No such document!");
-    }
-    return (
-      <div>
-        {/* Information Section */}
-
-        {/* Recommanded Hotels */}
-
-        {/* Daily plan */}
-
-        {/* Footer */}
-      </div>
-    );
   };
-}
-export default viewTrip;
+
+  return (
+    <div>
+      {/* Information Section */}
+
+      {/* Recommanded Hotels */}
+
+      {/* Daily plan */}
+
+      {/* Footer */}
+    </div>
+  );
+};
+
+export default ViewTrip;
