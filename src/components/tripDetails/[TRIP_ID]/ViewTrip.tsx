@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 import InfoSection from "./InfoSection";
+import Hotels from "./Hotels";
+
 
 const ViewTrip = () => {
   const [trip, setTrip] = useState<Record<string, any> | null>(null);
@@ -41,6 +43,7 @@ const ViewTrip = () => {
       <InfoSection trip={trip} />
 
       {/* Recommanded Hotels */}
+      <Hotels trip={trip} />
 
       {/* Daily plan */}
 
