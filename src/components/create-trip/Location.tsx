@@ -1,7 +1,7 @@
 import { SingleValue } from 'react-select';
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 import { FiMapPin } from 'react-icons/fi';
-import { PlaceOption, LocationInputProps } from '../../hooks/types';
+import { PlaceOption, LocationInputProps } from '../../types';
 
 export const LocationInput = ({ 
   value, 

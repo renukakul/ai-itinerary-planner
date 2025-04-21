@@ -4,6 +4,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
+import InfoSection from "./InfoSection";
 
 const ViewTrip = () => {
   const [trip, setTrip] = useState<Record<string, any> | null>(null);
@@ -35,8 +36,9 @@ const ViewTrip = () => {
   };
 
   return (
-    <div>
+    <div className="p-10 md:px-20 lg:px-40 bg-gray-100 min-h-screen"> 
       {/* Information Section */}
+      <InfoSection trip={trip} />
 
       {/* Recommanded Hotels */}
 

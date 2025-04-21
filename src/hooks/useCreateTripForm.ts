@@ -56,6 +56,13 @@ export const useCreateTripForm = () => {
   
     setLoading(true);
   
+    // Calculate total days
+    const totalDays = (new Date(formdata.endDate).getTime() - new Date(formdata.startDate).getTime()) / (1000 * 3600 * 24);
+    setFormData(prev => ({
+      ...prev,
+      totalDays: totalDays
+    }));
+  
     const user = localStorage.getItem("user");
     if (!user) {
       setOpenDialog(true);
@@ -63,10 +70,7 @@ export const useCreateTripForm = () => {
     }
   
     const FINAL_PROMPT = AI_PROMPT.replace("{location}", formdata?.location?.label)
-      .replace(
-        "{totalDays}",
-        String((new Date(formdata.endDate).getTime() - new Date(formdata.startDate).getTime()) / (1000 * 3600 * 24))
-      )
+      .replace("{totalDays}", String(totalDays))
       .replace("{headcount}", formdata?.headcount)
       .replace("{budget}", formdata?.budget);
   
@@ -94,7 +98,7 @@ export const useCreateTripForm = () => {
     console.log("formdata", formdata);
   }, [formdata]);
 
-const SaveAITrip = async (TripData: Record<string, any>) => {
+  const SaveAITrip = async (TripData: Record<string, any>) => {
     if (!TripData || Object.keys(TripData).length === 0) {
       console.error("Invalid trip data:", TripData);
       throw new Error("Invalid trip data");
@@ -104,8 +108,12 @@ const SaveAITrip = async (TripData: Record<string, any>) => {
     const user = JSON.parse(localStorage.getItem("user") || "{}");
     const docID = Date.now().toString();
   
+    // Save the trip data with userSelection including totalDays
     await setDoc(doc(db, "AITrips", docID), {
-      userSelection: formdata,
+      userSelection: {
+        ...formdata,  // Include all formdata fields
+        totalDays: formdata.totalDays,  // Add totalDays to userSelection
+      },
       tripData: TripData,
       userEmail: user?.email,
       docID: docID,
@@ -115,6 +123,7 @@ const SaveAITrip = async (TripData: Record<string, any>) => {
   
     navigate("/view-trip/" + docID);
   };
+  
 
   return {
     place,
