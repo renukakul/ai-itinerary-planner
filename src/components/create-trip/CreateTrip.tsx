@@ -6,7 +6,7 @@ import { TravelPartyInput } from "./HeadCount";
 import { TripBudgetList, SelectTravelesList } from "@/components/constants/options";
 import { useCreateTripForm } from "../../hooks/useCreateTripForm"
 import { LoginDialog } from "@/components/Dialog/LoginDialog";
-import axios from "axios";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 const CreateTrip = () => {
   const {
@@ -18,6 +18,8 @@ const CreateTrip = () => {
     handleInputChange,
     handleLocationChange,
     OnGenerateTrip,
+
+    loading,
   } = useCreateTripForm();
 
   
@@ -61,8 +63,12 @@ const CreateTrip = () => {
           description="Select your travel party size"
         />
         <div className="pt-6 flex justify-center">
-          <Button onClick={OnGenerateTrip} className="bg-gradient-to-r from-red-500 to-orange-500 text-white px-10 py-4 rounded-xl text-lg shadow-lg hover:scale-105 transition-all">
-            Create My Trip Plan
+          <Button 
+          disabled={loading}
+          onClick={OnGenerateTrip} className="bg-gradient-to-r from-red-500 to-orange-500 text-white px-10 py-4 rounded-xl text-lg shadow-lg hover:scale-105 transition-all">
+            {loading?
+            <AiOutlineLoading3Quarters className="animate-spin"  /> :
+            'Create My Trip Plan'}
           </Button>
         </div>
       </div>
