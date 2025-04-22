@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import InfoSection from "./InfoSection";
 import Hotels from "./Hotels";
 import PlacesToVisit from "./PlacesToVisit";
+import Footer from "./Footer";
 
 const ViewTrip = () => {
   const [trip, setTrip] = useState<Record<string, any> | null>(null);
@@ -64,6 +65,7 @@ const ViewTrip = () => {
       <PlacesToVisit trip={trip} />
 
      {/* Footer */}
+     <Footer/>
     </div>
   );
 };
