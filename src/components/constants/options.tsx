@@ -1,4 +1,5 @@
 
+import { generateTravelPlanWithStandardFormat } from "@/service/AIModal";
 import { Plane, Heart, Users, icons } from "lucide-react";
 export const SelectTravelesList = [
     {
