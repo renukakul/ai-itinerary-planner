@@ -1,16 +1,20 @@
 import { Button } from "@/components/ui/button";
-import { GetPlaceDetails } from "@/service/GlobalApi";
+import { GetPlaceDetails, PHOTO_REF_URL } from "@/service/GlobalApi";
 import React, { useEffect } from "react";
 import { IoIosSend } from "react-icons/io";
+
+
 
 function InfoSection({ trip }: { trip: Record<string, any> | null }) {
   console.log("Trip data:", trip);
   console.log("Total days: ", trip?.userSelection?.totalDays);
 
+  const[photoUrl,setPhotoUrl]=React.useState<string | null>(null);
+
+
   useEffect(() => {
-    if (trip?.userSelection?.location?.label) {
-      GetPlacePhoto();
-    }
+    
+      trip&&GetPlacePhoto();
   }, [trip]);
   
 
@@ -20,7 +24,12 @@ function InfoSection({ trip }: { trip: Record<string, any> | null }) {
         textQuery: trip?.userSelection?.location?.label,
       };
       const result = await GetPlaceDetails(data).then((res) => {
-        console.log("Place details:", res.data.places[0].photos[3].name);
+        console.log("Place details:", res.data);
+        console.log("Place details:", res.data.places[0].photos[2].name);
+
+        const PhotoUrl=PHOTO_REF_URL.replace("{NAME}",res.data.places[0].photos[0].name);
+        console.log("Photo URL:", PhotoUrl);
+        setPhotoUrl( PhotoUrl);
       });
     } catch (error) {
       console.error("Error fetching place details:", error);
@@ -30,7 +39,7 @@ function InfoSection({ trip }: { trip: Record<string, any> | null }) {
   return (
     <div>
       <img
-        src="/PlaceHolder.jpeg"
+        src={photoUrl||"/PlaceHolder.jpeg"}
         className="h-[500px] w-full object-cover rounded"
       />
       <div className="flex justify-between items-center bg-white p-5 rounded-b">
