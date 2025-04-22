@@ -2,7 +2,7 @@ import React from 'react';
 import PlaceCardItem from './PlaceCardItem';
 
 function PlacesToVisit({ trip }: { trip: Record<string, any> | null }) {
-  const itinerary = trip?.tripData?.travelPlan?.dailyItinerary || [];
+  const itinerary = trip?.tripData?.itinerary || [];
 
   if (!trip) {
     return (

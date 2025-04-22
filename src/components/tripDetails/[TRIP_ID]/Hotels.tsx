@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 function Hotels({ trip }: { trip: Record<string, any> | null }) {
   // Access hotels through the correct path
-  const hotels = trip?.tripData?.travelPlan?.hotels || []; 
+  const hotels = trip?.tripData?.hotels || []; 
 
   if (!trip) {
     return <p className="text-gray-600">Loading hotels...</p>;
