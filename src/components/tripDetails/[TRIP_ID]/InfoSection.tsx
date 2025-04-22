@@ -1,10 +1,32 @@
 import { Button } from "@/components/ui/button";
-import React from "react";
+import { GetPlaceDetails } from "@/service/GlobalApi";
+import React, { useEffect } from "react";
 import { IoIosSend } from "react-icons/io";
 
 function InfoSection({ trip }: { trip: Record<string, any> | null }) {
   console.log("Trip data:", trip);
   console.log("Total days: ", trip?.userSelection?.totalDays);
+
+  useEffect(() => {
+    if (trip?.userSelection?.location?.label) {
+      GetPlacePhoto();
+    }
+  }, [trip]);
+  
+
+  const GetPlacePhoto = async () => {
+    try {
+      const data = {
+        textQuery: trip?.userSelection?.location?.label,
+      };
+      const result = await GetPlaceDetails(data).then((res) => {
+        console.log("Place details:", res.data.places[0].photos[3].name);
+      });
+    } catch (error) {
+      console.error("Error fetching place details:", error);
+    }
+  };
+  
   return (
     <div>
       <img
