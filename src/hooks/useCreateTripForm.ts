@@ -66,10 +66,12 @@ export const useCreateTripForm = () => {
       return;
     }
   
-    const FINAL_PROMPT = AI_PROMPT.replace("{location}", formdata?.location?.label)
-      .replace("{totalDays}", String(totalDays))
-      .replace("{headcount}", formdata?.headcount)
-      .replace("{budget}", formdata?.budget);
+    const FINAL_PROMPT = AI_PROMPT(
+      totalDays,
+      formdata?.location?.label,
+      formdata?.headcount,
+      formdata?.budget
+    );
   
     try {
       const result = await generateTravelPlan(FINAL_PROMPT);
