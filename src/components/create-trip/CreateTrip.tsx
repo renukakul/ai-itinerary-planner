@@ -4,7 +4,8 @@ import { TripDates } from "./TripDates";
 import { TripBudget } from "./Budget";
 import { TravelPartyInput } from "./HeadCount";
 import { TripBudgetList, SelectTravelesList } from "@/components/constants/options";
-import { useCreateTripForm } from "../../hooks/useCreateTripForm"
+import { useCreateTripForm } from "../../hooks/useCreateTripForm";
+import { useAuth } from "@/hooks/useAuth";
 import { LoginDialog } from "@/components/Dialog/LoginDialog";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
@@ -12,17 +13,26 @@ const CreateTrip = () => {
   const {
     place,
     formdata,
-    openDialog,
-    login,
-    setOpenDialog,
     handleInputChange,
     handleLocationChange,
     OnGenerateTrip,
-
     loading,
   } = useCreateTripForm();
 
-  
+  const { 
+    authUser, 
+    isAuthDialogOpen, 
+    setIsAuthDialogOpen,
+    login 
+  } = useAuth();
+
+  const handleTripGeneration = async () => {
+    if (!authUser) {
+      setIsAuthDialogOpen(true);
+      return;
+    }
+    await OnGenerateTrip();
+  };
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 md:py-12 animate-fade-in">
@@ -64,16 +74,24 @@ const CreateTrip = () => {
         />
         <div className="pt-6 flex justify-center">
           <Button 
-          disabled={loading}
-          onClick={OnGenerateTrip} className="bg-gradient-to-r from-red-500 to-orange-500 text-white px-10 py-4 rounded-xl text-lg shadow-lg hover:scale-105 transition-all">
-            {loading?
-            <AiOutlineLoading3Quarters className="animate-spin"  /> :
-            'Create My Trip Plan'}
+            disabled={loading}
+            onClick={handleTripGeneration} 
+            className="bg-gradient-to-r from-red-500 to-orange-500 text-white px-10 py-4 rounded-xl text-lg shadow-lg hover:scale-105 transition-all"
+          >
+            {loading ? (
+              <AiOutlineLoading3Quarters className="animate-spin" />
+            ) : (
+              'Create My Trip Plan'
+            )}
           </Button>
         </div>
       </div>
 
-      <LoginDialog open={openDialog} onOpenChange={setOpenDialog} login={login} />
+      <LoginDialog 
+        open={isAuthDialogOpen} 
+        onOpenChange={setIsAuthDialogOpen} 
+        login={login} 
+      />
     </div>
   );
 };
