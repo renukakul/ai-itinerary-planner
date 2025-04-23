@@ -59,15 +59,19 @@ export const TripBudgetList = [
 // export const AI_PROMPT = `Generate a {totalDays} days travel itinerary in JSON format for location:{location} for a {headcount} people with a {budget} budget. Prioritize top-rated (4.0+ stars) hotels. Include hotel details and daily itinerary with places, ratings, and travel times and best time to visit those places .enerate Travel plan for Location: {location}, for {totalDays} days for a {headcount} person/people with a {budget} budget, give me a hotels options list with hotel name , hotel address , price, hotel image url, geo coordinates, rating, description, and suggest itinerary with placename, place details, place image url, geo coordinates, ticket pricing, rating, time travel each of the location for 3 days with each day plan with best time to visit in JSON format` 
 
 export const AI_PROMPT = (totalDays: number, location: string, headcount: number, budget: string) => `
-Generate a ${totalDays}-day travel itinerary EXCLUSIVELY within ${location}.
+Generate a ${totalDays}-day travel itinerary EXCLUSIVELY within ${location} for ${headcount} people with in ${budget} budget: 
+- 5+ HOTEL OPTIONS (all within ${budget})
+- DETAILED hourly daily plans
+- BACKUP activity options
 
 STRICT REQUIREMENTS:
-1. Response must be PURE JSON with DOUBLE QUOTES only
-2. ALL locations must be within ${location}'s municipal boundaries
-3. Hotels must have:
-   - Minimum 4.0 rating
-   - Valid Google Maps listing
-   - Actual photo URLs
+1. Pure JSON with double quotes ONLY
+2. ALL locations within ${location}'s municipal boundaries
+3. Hotels MUST have:
+   - 4.0+ rating
+   - Valid Google Maps links
+   - Real photo URLs (1000px+ width)
+   - Exact ${budget} pricing
 
 RESPONSE FORMAT:
 {
@@ -78,81 +82,46 @@ RESPONSE FORMAT:
     {
       "name": "string",
       "address": "string",
-      "price": "string",
+      "price": "string (MUST match ${budget})",
       "imageUrl": "string",
       "geoCoordinates": "string",
       "rating": number,
-      "description": "string"
-    }
+      "proximityScore": number (1-10, 10=best location),
+      "bookingLink": "string"
+    },
+    // MINIMUM 5 HOTELS
   ],
   "itinerary": [
-    {
-      "day": number,
-      "plan": [
-        {
-          "placeName": "string",
-          "placeDetails": "string",
-          "imageUrl": "string",
-          "geoCoordinates": "string",
-          "ticketPricing": "string",
-          "rating": number,
-          "timeTravel": "string",
-          "bestTime": "string"
-        }
-      ]
-    }
-  ]
+{
+"day": number,
+"plan": [
+{
+"placeName": "string",
+"placeDetails": "string",
+"imageUrl": "string",
+"geoCoordinates": "string",
+"ticketPricing": "string",
+"rating": number,
+"timeTravel": "string",
+"bestTime": "string"
+}
+  "proTips": {
+    "moneySavingHacks": ["string"],
+    "localSecrets": ["string"]
+  }
 }
 
-IMPORTANT:
-- Only respond with VALID JSON
-- No additional text/comments
-- All strings must use double quotes`;
+CRITICAL RULES:
+1. HOTELS:
+   - 5+ options minimum
+   - ALL must strictly match ${budget}
+   - Include direct booking links
 
+2. ITINERARY:
+   - day travel itinerary EXCLUSIVELY within ${location}
+   - Logical geographic flow
 
-// // Generate a {totalDays }day travel itinerary for {location} for {headCount} people with a {budget} budget. 
-// // STRICT REQUIREMENTS:
-// // Response must be PURE JSON only (no markdown, no code fences)
-// // Use ONLY these exact field names (no variations allowed)
-// // REQUIRED STRUCTURE:
-// // {
-// // "budget": {"string (e.g. 'Cheap', 'Medium', 'Luxury')",},
-// // "headcount": {headCount},
-// // "location": {Location}
-// // "hotels": [
-// // {
-// // "name": "string",
-// // "address": "string",
-// // "price": "string",
-// // "imageUrl": "string (URL)",
-// // "geoCoordinates": "string (lat,lng)",
-// // "rating": "number (1-5)",
-// // "description": "string"
-// // }
-// // ],
-// // "itinerary": [
-// // {
-// // "day": 1,
-// // "plan": [
-// // {
-// // "placeName": "string",
-// // "placeDetails": "string",
-// // "imageUrl": "string (URL)",
-// // "geoCoordinates": "string (lat,lng)",
-// // "ticketPricing": "string",
-// // "rating": "number (1-5)",
-// // "timeTravel": "string (e.g. '30 mins from city center')",
-// // "bestTime": "string (e.g. 'Morning 9AM-11AM')"
-// // }
-// // ]
-// }
-// ]
-// }
-// RULES:
-// Include hotel options (all 4.0+ rated)
-// Create full {totalDays}day itinerary (1 entry per day minimum)
-// Never use alternative field names
-// Coordinates as "latitude,longitude"
-// If any field is unknown, use empty string ""
-// No additional explanations or text outside JSON
-// YOUR RESPONSE MUST BE VALID JSON THAT MATCHES THIS EXACT STRUCTURE:`
+3. DATA QUALITY:
+   - No placeholder text
+   - All image URLs working
+   - All prices verified`;
