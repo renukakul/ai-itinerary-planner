@@ -1,7 +1,47 @@
-import React from 'react';
+import { GetPlaceDetails, PHOTO_REF_URL } from '@/service/GlobalApi';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 function PlaceCardItem({ place }: { place: any }) {
+
+  const[photoUrl,setPhotoUrl]=React.useState<string | null>(null);
+  
+  
+    useEffect(() => {
+      
+        place&&GetPlacePhoto();
+    }, [place]);
+    
+    
+  
+    const GetPlacePhoto = async () => {
+      try {
+        const data = {
+          textQuery: place.placeName,
+        };
+        const result = await GetPlaceDetails(data).then((res) => {
+          console.log("Place details:", res.data);
+          console.log("Place details:", res.data.places[0].photos[0].name);
+  
+          const PhotoUrl=PHOTO_REF_URL.replace("{NAME}",res.data.places[0].photos[0].name);
+          console.log("Photo URL:", PhotoUrl);
+          setPhotoUrl( PhotoUrl);
+    const photoArray = res.data?.places?.[0]?.photos;
+    if (photoArray && photoArray.length > 0) {
+      const photoRef = photoArray[0].name;
+      const constructedUrl = PHOTO_REF_URL.replace("{NAME}", photoRef);
+      setPhotoUrl(constructedUrl);
+      console.log("Photo URL:", constructedUrl);
+    } else {
+      console.log("No photo found for", place.placeName);
+      setPhotoUrl(null);
+    }
+  });
+} catch (error) {
+  console.error("Error fetching place details:", error);
+}
+  
+    };
   return (
     <Link 
       to={`https://www.google.com/maps/search/?api=1&query=${place.placeName} ${place.address}`} 
@@ -13,7 +53,7 @@ function PlaceCardItem({ place }: { place: any }) {
         {/* Image container with fixed aspect ratio */}
         <div className='min-w-[100px] h-[100px] rounded-xl overflow-hidden'>
           <img 
-            src={'/placeCard.jpeg'} 
+            src={photoUrl?photoUrl : '/placeCard.jpeg'} 
             alt={place.placeName} 
             className='w-full h-full object-cover'
           />
