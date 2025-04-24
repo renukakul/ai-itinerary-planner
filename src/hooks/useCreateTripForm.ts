@@ -69,14 +69,34 @@ export const useCreateTripForm = () => {
   
     setLoading(true);
     try {
+      // Get user data - choose one of these methods:
+      
+      // Method 1: From localStorage (if you're storing user data there)
+      const userFromStorage = localStorage.getItem('user');
+      const userEmail = userFromStorage ? JSON.parse(userFromStorage).email : null;
+      
+      // OR Method 2: From your auth provider (recommended)
+      // const userEmail = auth.currentUser?.email; // If using Firebase Auth
+      
+      if (!userEmail) {
+        toast.error("User email not available");
+        return;
+      }
+  
       const docID = Date.now().toString();
+      
       await setDoc(doc(db, "AITrips", docID), {
         userSelection,
         tripData,
         docID,
+        userEmail, // Now properly included
         createdAt: new Date().toISOString()
       });
+  
       navigate("/view-trip/" + docID);
+    } catch (error) {
+      console.error("Error saving trip:", error);
+      toast.error("Failed to save trip");
     } finally {
       setLoading(false);
     }
