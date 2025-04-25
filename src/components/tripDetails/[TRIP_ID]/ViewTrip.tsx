@@ -31,21 +31,15 @@ const ViewTrip = () => {
 
       if (docSnap.exists()) {
         setTrip(docSnap.data());
-        toast.success("Trip loaded successfully", {
-          description: "Your travel itinerary is ready!",
-        });
+        toast.success("Trip loaded successfully");
       } else {
         setError("Trip not found");
-        toast.error("Trip not found", {
-          description: "The requested trip doesn't exist or may have been deleted.",
-        });
+        toast.error("Trip not found");
       }
     } catch (error) {
       console.error("Error fetching trip:", error);
       setError("Failed to load trip details");
-      toast.error("Connection error", {
-        description: "We couldn't load your trip. Please try again later.",
-      });
+      toast.error("Connection error");
     } finally {
       setLoading(false);
     }
@@ -53,17 +47,16 @@ const ViewTrip = () => {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-6">
-        <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+      <div className="flex flex-col items-center justify-center min-h-screen p-6">
+        <div className="w-16 h-16 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mb-4"></div>
         <h2 className="text-xl font-medium text-gray-800 mb-2">Loading your trip</h2>
-        <p className="text-gray-600">Gathering all the details for your adventure...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-6 text-center">
+      <div className="flex flex-col items-center justify-center min-h-screen p-6 text-center">
         <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mb-4">
           <svg 
             className="w-10 h-10 text-red-500" 
@@ -79,11 +72,11 @@ const ViewTrip = () => {
             />
           </svg>
         </div>
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">Oops! Something went wrong</h2>
-        <p className="text-gray-600 mb-6 max-w-md">{error}</p>
+        <h2 className="text-2xl font-bold text-gray-800 mb-2">Error loading trip</h2>
+        <p className="text-gray-600 mb-6">{error}</p>
         <button
           onClick={tripDetails}
-          className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600"
         >
           Try Again
         </button>
@@ -92,23 +85,12 @@ const ViewTrip = () => {
   }
 
   return (
-    <div className="bg-gray-50 min-h-screen">
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
-        {/* Information Section */}
+    <div className="min-h-screen">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         <InfoSection trip={trip} />
-
-        {/* Recommended Hotels */}
-        <div className="mt-12">
-          <Hotels trip={trip} />
-        </div>
-
-        {/* Daily plan */}
-        <div className="mt-12">
-          <PlacesToVisit trip={trip} />
-        </div>
+        <Hotels trip={trip} />
+        <PlacesToVisit trip={trip} />
       </main>
-
-      {/* Footer */}
       <Footer />
     </div>
   );
