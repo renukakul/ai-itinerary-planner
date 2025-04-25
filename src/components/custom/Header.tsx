@@ -4,12 +4,9 @@ import { Popover, PopoverTrigger, PopoverContent } from '../ui/popover';
 import { useNavigate } from 'react-router-dom';
 import { googleLogout } from '@react-oauth/google';
 import { LoginDialog } from '../Dialog/LoginDialog';
-import { useCreateTripForm } from '@/hooks/useCreateTripForm';
 import { useAuth } from '@/hooks/useAuth';
 
-
 function Header() {
- 
   const { 
     authUser, 
     login, 
@@ -18,71 +15,72 @@ function Header() {
     setIsAuthDialogOpen 
   } = useAuth();
   const [user, setUser] = React.useState(() => {
-    // Initialize user state from localStorage
     return JSON.parse(localStorage.getItem('user') || '{}');
   });
 
   const handleLogout = () => {
     googleLogout();
     localStorage.clear();
-    setUser(null); // Update the user state to null
-    window.location.reload(); // Optional: Reload the page
+    setUser(null);
+    window.location.reload();
   };
 
   React.useEffect(() => {
     console.log(user);
   }, [user]);
 
- 
-
   return (
-    <div className="w-full border-b border-gray-100 bg-white px-4 py-3 shadow-sm">
-      <div className="mx-auto flex max-w-6xl items-center justify-between">
+    <div className="w-full border-b border-orange-100 bg-white/80 backdrop-blur-sm px-4 py-3 shadow-sm">
+      <div className="mx-auto flex max-w-7xl items-center justify-between">
         {/* Logo */}
-        <div className="flex items-center">
+        <a href="/" className="flex items-center group">
           <img 
             src="/logo.svg" 
             alt="WanderWise" 
-            className="h-9 w-auto transition-all hover:opacity-80"
+            className="h-10 w-auto transition-all group-hover:opacity-80"
             width={140}
             height={36}
           />
-          <span className="ml-2 hidden text-xl font-semibold text-gray-800 sm:block">
-            Wander<span className="text-red-500">Wise</span>
+          <span className="ml-2 hidden text-2xl font-bold text-gray-900 sm:block">
+            Wander<span className="bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">Wise</span>
           </span>
-        </div>
+        </a>
   
         {/* Auth section */}
         <div>
           {authUser?.name ? (
             <div className="flex items-center gap-4">
               <a href="/create-trip">
-              <Button variant="outline" className="rounded-full"> + Create Trips</Button>
+                <Button className="rounded-full bg-gradient-to-r from-orange-500 to-red-500 text-white hover:from-orange-600 hover:to-red-600 shadow-md hover:shadow-lg transition-all">
+                  + Create Trip
+                </Button>
               </a>
               
               <a href="/my-trips">
-              <Button variant="outline" className="rounded-full">My Trips</Button>
+                <Button variant="outline" className="rounded-full border-orange-300 text-gray-700 hover:bg-orange-50 hover:border-orange-400">
+                  My Trips
+                </Button>
               </a>
               
               <Popover>
                 <PopoverTrigger asChild>
-                  <div className="ml-4 h-10 w-10 rounded-full border-2 border-gray-300 cursor-pointer">
+                  <div className="ml-4 h-10 w-10 rounded-full border-2 border-orange-200 cursor-pointer hover:border-orange-300 transition-all shadow-sm">
                     <img
                       src={authUser.picture}
                       alt="Profile"
-                      className="h-full w-full rounded-full"
+                      className="h-full w-full rounded-full object-cover"
                     />
                   </div>
                 </PopoverTrigger>
-                <PopoverContent className="w-48">
+                <PopoverContent className="w-48 p-2 rounded-xl border-orange-100 shadow-lg">
                   <div className="flex flex-col gap-2">
-                    <Button variant="outline" className="rounded-full">
+                    <Button variant="outline" className="rounded-full border-orange-200 text-gray-700 hover:bg-orange-50">
                       Profile
                     </Button>
                     <Button
                       onClick={handleLogout}
                       variant="outline"
-                      className="rounded-full"
+                      className="rounded-full border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300"
                     >
                       Logout
                     </Button>
@@ -94,15 +92,14 @@ function Header() {
             <>
               <Button 
                 onClick={() => setIsAuthDialogOpen(true)} 
-                variant="outline" 
-                className="rounded-full"
+                className="rounded-full bg-gradient-to-r from-orange-500 to-red-500 text-white hover:from-orange-600 hover:to-red-600 shadow-md hover:shadow-lg px-6 py-2"
               >
                 Sign In
               </Button>
               <LoginDialog
                 open={isAuthDialogOpen}
                 onOpenChange={setIsAuthDialogOpen}
-                login={login}  // Fixed typo from "onGooleLogin" to "login"
+                login={login}
               />
             </>
           )}
