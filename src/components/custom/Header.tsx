@@ -34,13 +34,7 @@ function Header() {
       <div className="mx-auto flex max-w-7xl items-center justify-between">
         {/* Logo */}
         <a href="/" className="flex items-center group">
-          <img 
-            src="/logo.svg" 
-            alt="WanderWise" 
-            className="h-10 w-auto transition-all group-hover:opacity-80"
-            width={140}
-            height={36}
-          />
+         
           <span className="ml-2 hidden text-2xl font-bold text-gray-900 sm:block">
             Wander<span className="bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">Wise</span>
           </span>
