@@ -1,8 +1,8 @@
 import { db } from '@/service/FirebaseConfig';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import React, { use, useEffect, useState } from 'react'
-import TripCardItem from './tripCardItem';
 import { useNavigate } from 'react-router-dom';
+import TripCardItem from './TripCardItem';
 
 function MyTrips() {
     const navigate = useNavigate();
